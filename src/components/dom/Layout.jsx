@@ -1,11 +1,17 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useEffect, useContext } from 'react'
 import dynamic from 'next/dynamic'
+import { TransitionContext } from '@/context/TransitionContext'
 const Scene = dynamic(() => import('@/components/canvas/Scene'), { ssr: false })
 
-const Layout = ({ children }) => {
+const Layout = (props) => {
   const ref = useRef()
+  const { setBackground } = useContext(TransitionContext)
+
+  useEffect(() => {
+    setBackground(props.background || "black")
+  }, [props.background])
 
   return (
     <div
@@ -16,9 +22,10 @@ const Layout = ({ children }) => {
         height: '100%',
         overflow: 'auto',
         touchAction: 'auto',
+        display: 'flex',
       }}
     >
-      {children}
+      {props.children}
       <Scene
         style={{
           position: 'fixed',
